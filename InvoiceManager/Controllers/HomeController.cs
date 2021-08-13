@@ -65,6 +65,7 @@ namespace InvoiceManager.Controllers
             var vm = PrepareInvoicePositionVm(invoicePosition);
             return View(vm);
         }
+
         public ActionResult Clients()
         {
             var userId = User.Identity.GetUserId();
@@ -77,6 +78,13 @@ namespace InvoiceManager.Controllers
             }
 
             return View(clients);
+        }
+
+        public ActionResult AddClient()
+        {
+            ViewBag.Title = "Your contact page.";
+
+            return View();
         }
 
         private EditInvoicePositionViewModel PrepareInvoicePositionVm(InvoicePosition invoicePosition)
