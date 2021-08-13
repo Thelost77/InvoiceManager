@@ -1,0 +1,88 @@
+﻿@model IEnumerable<InvoiceManager.Models.Domains.Invoice>
+
+@{
+    ViewBag.Title = "Faktury";
+}
+
+<h1 class="mb-3">Faktury</h1>
+
+
+<button class="btn btn-primary mb-3" onclick='window.location.href = "@Url.Action("Invoice","Home")"'>Dodaj</button>
+<button class="btn btn-info mb-3 float-end" onclick='window.location.href = "@Url.Action("Clients","Home")"'>Klienci</button>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-hover table-striped mt-3 mb-5">
+        <thead>
+            <tr>
+                <th scope="col">Tytuł</th>
+                <th scope="col">Klient</th>
+                <th scope="col">Wartość</th>
+                <th scope="col">Data utworzenia</th>
+                <th scope="col">Termin płatności</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var invoice in Model)
+            {
+            <tr>
+                <td>
+                    <a href="@Url.Action("Invoice", "Home", new { id = invoice.Id })">
+                        @invoice.Title
+                    </a>                    
+                </td>
+                <td>@invoice.Client.Name</td>
+                <td>@invoice.Value zł</td>
+                <td>@invoice.CreatedDate.ToString("dd-MM-yyyy")</td>
+                <td>@invoice.PaymentDate.ToString("dd-MM-yyyy")</td>
+                <td>
+                    <button class="btn btn-danger btn-sm" 
+                            onclick="deleteInvoice('@invoice.Id', this)">
+                            Usuń
+                    </button>
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div>
+        Brak faktur do wyświetlenia.
+    </div>
+}
+
+
+@section Scripts
+{
+    <script type="text/javascript">
+
+        function deleteInvoice(id, btn) {
+
+            if (!confirm("Czy napewno chcesz usunąć fakturę?")) 
+                return;
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("Delete","Home")",
+                data: {
+                    id: id
+                },
+                success: function (data) {
+                    if (data.Success) {
+                        var row = btn.parentNode.parentNode;
+                        row.parentNode.removeChild(row);
+                    } else {
+                        alert(data.Message);
+                    }
+                },
+                error: function (data) {
+                    alert(data.Message);
+                },
+                dataType: 'json'
+            });
+        }
+
+    </script>
+}

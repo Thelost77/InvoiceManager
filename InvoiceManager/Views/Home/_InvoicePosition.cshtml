@@ -1,0 +1,48 @@
+﻿@model IEnumerable<InvoiceManager.Models.Domains.InvoicePosition>
+
+<div class="row">
+    <h2>Pozycje faktury</h2>
+
+    <table class="table table-hover table-striped mt-3 mb-5">
+        <thead>
+            <tr>
+                <th scole="col">Lp</th>
+                <th scole="col">Produkt</th>
+                <th scole="col">Ilość</th>
+                <th scole="col">Wartość</th>
+                <th scole="col">Lp</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var position in Model)
+            {
+                <tr>
+                    <td>
+                        <a class="font-weight-bold"
+                           href="
+                           @Url.Action("InvoicePosition","Home",
+                        new
+                        {
+
+                            invoiceId = position.InvoiceId,
+                            invoicePositionId =position.Id})">
+
+                            @position.Lp
+
+                        </a>
+                    </td>
+                    <td>@position.Product.Name</td>
+                    <td>@position.Quantity</td>
+                    <td>@position.Value</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm"
+                                onclick="deleteInvoicePosition('@position.Id', '@position.InvoiceId', this)">
+                            Usuń
+                        </button>
+                    </td>
+                </tr>
+
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Zarządzanie fakturami</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5 ">
+        <div class="container">
+            <a class="navbar-brand" href="@Url.Action("Index", "Home")">Strona główna</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item active">
+                        @Html.ActionLink("O mnie", "About", "Home", null, new { @class = "nav-link" })
+                    </li>
+                    <li class="nav-item active">
+                        @Html.ActionLink("Kontakt", "Contact", "Home", null, new { @class = "nav-link" })
+                    </li>
+                </ul>
+            </div>
+            @Html.Partial("_LoginPartial")
+        </div>
+    </nav>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Zarządzanie fakturami</p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/bootstrap")
+
+
+
+    <div class="privacyPoliceInfo" style="display: none;">
+        Serwis wykorzystuje pliki cookies. Korzystając ze strony wyrażasz zgodę na wykorzystanie plików cookies.
+        <button onclick="closePrivacyPolice()" type="button" class="btn btn-light btn-sm  mx-3 my-1 privacyPoliceBtn"> Ok rozumiem.</button>
+    </div>
+
+    <script>
+        function closePrivacyPolice() {
+
+            $('.privacyPoliceInfo').css("display", "none");
+            $.cookie("privacyPolice", "1", { path: '/', expires: 365 });
+        }
+
+        $(document).ready(function () {
+            if ($.cookie("privacyPolice") !== "1")
+                $('.privacyPoliceInfo').css("display", "");
+        });
+
+    </script>
+
+
+    @RenderSection("scripts", required: false)
+</body>
+</html>

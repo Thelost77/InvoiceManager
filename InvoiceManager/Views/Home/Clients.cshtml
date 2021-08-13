@@ -1,0 +1,85 @@
+﻿@model IEnumerable<InvoiceManager.Models.Domains.Client>
+
+@{
+    ViewBag.Title = "Clients";
+}
+
+<div>
+    <button class="btn btn-primary mb-3">
+        Dodaj Klienta
+    </button>
+</div>
+
+
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-hover table-striped mt-3 mb-5">
+        <thead>
+            <tr>
+                <th scope="col">Nazwa</th>
+                <th scope="col">Kod pocztowy</th>
+                <th scope="col">Miasto</th>
+                <th scope="col">Ulica</th>
+                <th scope="col">Adres Email</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var client in Model)
+            {
+                <tr>
+                    <td>@client.Name</td>
+                    <td>@client.Address.PostalCode</td>
+                    <td>@client.Address.City</td>
+                    <td>@client.Address.Street</td>
+                    <td>@client.Email</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm"
+                                onclick="deleteClient('@client.Id', this)">
+                            Usuń
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div>
+        Brak klientów do wyświetlenia.
+    </div>
+}
+
+@section Scripts
+{
+    <script type="text/javascript">
+
+        function deleteClient(id, btn) {
+
+            if (!confirm("Czy napewno chcesz usunąć klienta?"))
+                return;
+            $.ajax({
+                type: 'POST',
+                url: "@Url.Action("DeleteClient","Home")",
+                data: {
+                    id: id
+                },
+                success: function (data) {
+                    if (data.Success) {
+                        var row = btn.parentNode.parentNode;
+                        row.parentNode.removeChild(row);
+                    } else {
+                        alert(data.Message);
+                    }
+                },
+                error: function (data) {
+                    alert(data.Message);
+                },
+                dataType: 'json'
+            });
+        }
+
+    </script>
+}
