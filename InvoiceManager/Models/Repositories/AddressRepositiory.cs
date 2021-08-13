@@ -12,9 +12,17 @@ namespace InvoiceManager.Models.Repositories
         {
             using (var context = new ApplicationDbContext())
             {
-                return context.Addresses.Where(x => x.Id == addressId).ToList().FirstOrDefault();
+                return context.Addresses.Single(x => x.Id == addressId);
             }
         }
-       
+
+        public List<Address> GetAddresses(int addressId)
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                return context.Addresses.ToList();
+            }
+        }
+
     }
 }

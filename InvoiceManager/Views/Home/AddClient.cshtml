@@ -1,54 +1,63 @@
-﻿@model InvoiceManager.Models.ViewModels.EditInvoicePositionViewModel
+﻿@model InvoiceManager.Models.ViewModels.AddEditClientsViewModel
 
 
 <h1>@ViewBag.Title</h1>
 
 @using (Html.BeginForm("AddClient", "Home"))
 {
-        @Html.AntiForgeryToken()
+    @Html.AntiForgeryToken()
 
-        <p class="alert alert-info mt-4 mb-4">
-            Pola Lp, Produkt oraz Ilość są
-            <strong>wymagane</strong>
-        </p>
+    <p class="alert alert-info mt-4 mb-4">
+        Pola Nazwa, Adres oraz Adres email
+        <strong>wymagane</strong>
+    </p>
 
-    /*@Html.HiddenFor(x => x.InvoicePosition.Id)
-    @Html.HiddenFor(x => x.InvoicePosition.InvoiceId)
+    @Html.HiddenFor(x => x.Client.Id)
 
     <div class="form-group mb-2">
-        @Html.LabelFor(x => x.InvoicePosition.Lp)
-        @Html.TextBoxFor(x => x.InvoicePosition.Lp,
+        @Html.LabelFor(x => x.Client.Name)
+        @Html.TextBoxFor(x => x.Client.Name,
            new { @class = "form-control", autofocus = "autofocus" })
-        @Html.ValidationMessageFor(x => x.InvoicePosition.Lp)
+        @Html.ValidationMessageFor(x => x.Client.Name)
     </div>
 
     <div class="form-group mb-2">
-        @Html.LabelFor(x => x.InvoicePosition.ProductId)
-        @Html.DropDownListFor(x => x.InvoicePosition.ProductId,
-           new SelectList(Model.Products, "Id", "Name"), "-- Wybierz produkt --", new { @class = "form-control" })
-        @Html.ValidationMessageFor(x => x.InvoicePosition.ProductId)
-
+        @Html.LabelFor(x => x.Address.City)
+        @Html.TextBoxFor(x => x.Address.City,
+           new { @class = "form-control", autofocus = "autofocus" })
+        @Html.ValidationMessageFor(x => x.Address.City)
     </div>
 
     <div class="form-group mb-2">
-        @Html.LabelFor(x => x.InvoicePosition.Quantity)
-        @Html.TextBoxFor(x => x.InvoicePosition.Quantity,
+        @Html.LabelFor(x => x.Address.PostalCode)
+        @Html.TextBoxFor(x => x.Address.PostalCode,
+           new { @class = "form-control", autofocus = "autofocus" })
+        @Html.ValidationMessageFor(x => x.Address.PostalCode)
+    </div>
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(x => x.Address.Street)
+        @Html.TextBoxFor(x => x.Address.Street,
+           new { @class = "form-control", autofocus = "autofocus" })
+        @Html.ValidationMessageFor(x => x.Address.Street)
+    </div>
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(x => x.Address.Number)
+        @Html.TextBoxFor(x => x.Address.Number,
+           new { @class = "form-control", autofocus = "autofocus" })
+        @Html.ValidationMessageFor(x => x.Address.Number)
+    </div>
+
+    <div class="form-group mb-2">
+        @Html.LabelFor(x => x.Client.Email)
+        @Html.TextBoxFor(x => x.Client.Email,
            new { @class = "form-control" })
-        @Html.ValidationMessageFor(x => x.InvoicePosition.Quantity)
+        @Html.ValidationMessageFor(x => x.Client.Email)
     </div>
-
-    if (Model.InvoicePosition.Id != 0)
-    {
-        <div class="form-group mb-2">
-            @Html.LabelFor(x => x.InvoicePosition.Value)
-            @Html.TextBoxFor(x => x.InvoicePosition.Value,
-               new { @class = "form-control", @readonly = "readonly" })
-        </div>
-    }*/
 }
 
 
-    <button class="btn btn-primary btn-lg mb-5" type="submit">
-        Zapisz
-    </button>
-}
+<button class="btn btn-primary mt-2" type="submit">
+    Zapisz
+</button>

@@ -80,12 +80,62 @@ namespace InvoiceManager.Controllers
             return View(clients);
         }
 
-        public ActionResult AddClient()
+        public ActionResult AddClient(int clientId)
         {
-            ViewBag.Title = "Your contact page.";
+            var userId = User.Identity.GetUserId();
 
-            return View();
+            var client = clientId == 0 ?
+                GetNewClient(userId) :
+                _clientRepository.GetClient(clientId, userId);
+
+            var vm = PrepareAddEditClientVm(client);
+
+            return View(vm);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddClient(Client client)
+        {
+
+            var userId = User.Identity.GetUserId();
+            client.UserId = userId;
+
+            if (!ModelState.IsValid)
+            {
+                var vm = PrepareAddEditClientVm(client);
+                return View("AddClient", vm);
+            }
+
+            if (client.Id == 0)
+                _clientRepository.Add(client);
+            else
+                _clientRepository.Edit(client);
+
+
+
+            return RedirectToAction("Index");
+        }
+
+        private Client GetNewClient(string userId)
+        {
+            return new Client
+            {
+                UserId = userId
+            };
+        }
+
+        private AddEditClientsViewModel PrepareAddEditClientVm(Client client)
+        {
+            return new AddEditClientsViewModel
+            {
+                Client = client,
+                Heading = client.Id == 0 ?
+                "Dodawanie nowego klienta" : "Klient",
+                Address = client.Id == 0 ? new Address() :  _addressRepositiory.GetAddress(client.AddressId)
+            };
+        }
+        
 
         private EditInvoicePositionViewModel PrepareInvoicePositionVm(InvoicePosition invoicePosition)
         {

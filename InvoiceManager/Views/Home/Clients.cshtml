@@ -5,7 +5,7 @@
 }
 
 <div>
-    <button class="btn btn-primary mb-3" onclick='window.location.href = "@Url.Action("AddClient","Home")"'>
+    <button class="btn btn-primary mb-3" onclick='window.location.href = "@Url.Action("AddClient","Home", new {clientId = 0 })"'>
         Dodaj Klienta
     </button>
 </div>
@@ -21,6 +21,7 @@
                 <th scope="col">Kod pocztowy</th>
                 <th scope="col">Miasto</th>
                 <th scope="col">Ulica</th>
+                <th scope="col">Numer</th>
                 <th scope="col">Adres Email</th>
                 <th scope="col"></th>
             </tr>
@@ -29,10 +30,19 @@
             @foreach (var client in Model)
             {
                 <tr>
-                    <td>@client.Name</td>
+                    <td>
+                        <a class="font-weight-bold"
+                           href="
+                           @Url.Action("AddClient","Home",
+                        new
+                        {clientId = client.Id})">
+                            @client.Name
+                        </a>
+                    </td>
                     <td>@client.Address.PostalCode</td>
                     <td>@client.Address.City</td>
                     <td>@client.Address.Street</td>
+                    <td>@client.Address.Number</td>
                     <td>@client.Email</td>
                     <td>
                         <button class="btn btn-danger btn-sm"
