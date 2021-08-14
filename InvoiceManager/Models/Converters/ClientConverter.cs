@@ -12,7 +12,6 @@ namespace InvoiceManager.Models.Converters
         {
             return new CurrentClient
             {
-                Id = client.Id,
                 Name = client.Name,
                 AddressId = client.AddressId,
                 Email = client.Email,

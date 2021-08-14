@@ -70,7 +70,7 @@ namespace InvoiceManager.Controllers
         {
             var userId = User.Identity.GetUserId();
 
-            var clients = _clientRepository.GetClients(userId);
+            var clients = _clientRepository.GetCurrentClients(userId);
 
             foreach (var client in clients)
             {
@@ -84,9 +84,15 @@ namespace InvoiceManager.Controllers
         {
             var userId = User.Identity.GetUserId();
 
+            var currentClient = clientId == 0 ?
+                GetNewCurrentClient(userId) :
+                _clientRepository.GetCurrentClient(clientId, userId);
+
+
             var client = clientId == 0 ?
                 GetNewClient(userId) :
-                _clientRepository.GetClient(clientId, userId);
+                _clientRepository.GetClient(currentClient);            
+                
 
             var vm = PrepareAddEditClientVm(client);
 
@@ -95,26 +101,46 @@ namespace InvoiceManager.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddClient(Client client)
+        public ActionResult AddClient(Client client, Address address)
         {
-
+            client.AddressId = 0;
             var userId = User.Identity.GetUserId();
             client.UserId = userId;
 
             if (!ModelState.IsValid)
             {
-                var vm = PrepareAddEditClientVm(client);
+                var vm = PrepareAddEditClientVm(client, address);
                 return View("AddClient", vm);
             }
 
             if (client.Id == 0)
+            {
+                _addressRepositiory.Add(address);
+                client.AddressId = address.Id;
                 _clientRepository.Add(client);
+                
+            }
+                
             else
+            {
+                _addressRepositiory.Add(address);
+                client.AddressId = address.Id;
                 _clientRepository.Edit(client);
+                
+            }
+                
 
 
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Clients");
+        }
+
+        private CurrentClient GetNewCurrentClient(string userId)
+        {
+            return new CurrentClient
+            {
+                UserId = userId
+            };
         }
 
         private Client GetNewClient(string userId)
@@ -125,14 +151,25 @@ namespace InvoiceManager.Controllers
             };
         }
 
-        private AddEditClientsViewModel PrepareAddEditClientVm(Client client)
+        private AddEditClientsViewModel PrepareAddEditClientVm(Client client, Address address = null)
         {
+            if (address == null)
+            {
+                return new AddEditClientsViewModel
+                {
+                    Client = client,
+                    Heading = client.Id == 0 ?
+                    "Dodawanie nowego klienta" : "Klient",
+                    Address = client.Id == 0 ? new Address() : _addressRepositiory.GetAddress(client.AddressId)
+                };
+            }
+
             return new AddEditClientsViewModel
             {
                 Client = client,
                 Heading = client.Id == 0 ?
-                "Dodawanie nowego klienta" : "Klient",
-                Address = client.Id == 0 ? new Address() :  _addressRepositiory.GetAddress(client.AddressId)
+                    "Dodawanie nowego klienta" : "Klient",
+                Address = address
             };
         }
         
@@ -267,8 +304,8 @@ namespace InvoiceManager.Controllers
             return new EditInoviceViewModel
             {
                 Invoice = invoice,
+                Clients = _clientRepository.GetCurrentClients(userId),
                 Heading = invoice.Id == 0 ? "Dodawanie nowej faktury" : "Faktura",
-                Clients = _clientRepository.GetClients(userId),
                 MethodOfPayments = _invoiceRepository.GetMethodsOfPayment()
             };
         }

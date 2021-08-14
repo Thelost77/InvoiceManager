@@ -20,11 +20,27 @@ namespace InvoiceManager.Models.Repositories
             }
         }
 
-        public Client GetClient(int clientId, string userId)
+        public CurrentClient GetCurrentClient(int clientId, string userId)
         {
             using (var context = new ApplicationDbContext())
             {
-                return context.Clients.Single(x => x.Id == clientId && x.UserId == userId);
+                return context.CurrentClients.Single(x => x.Id == clientId && x.UserId == userId);
+            }
+        }
+
+        public Client GetClient(CurrentClient client)
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                return context.Clients.Single(x => x.Id == client.Id && x.UserId == client.UserId);
+            }
+        }
+
+        public Client GetClient(int id, string userId)
+        {
+            using (var context = new ApplicationDbContext())
+            {
+                return context.Clients.Single(x => x.Id == id && x.UserId == userId);
             }
         }
         public List<CurrentClient> GetCurrentClients(string userId)
@@ -63,11 +79,13 @@ namespace InvoiceManager.Models.Repositories
             {
                 var currentClientToEdit = context.CurrentClients.Single(x => x.Id == client.Id && x.UserId == client.UserId);
                 var clientToEdit = context.Clients.Single(x => x.Id == client.Id && x.UserId == client.UserId);
-                clientToEdit.Id = client.Id;
                 clientToEdit.Name = client.Name;
-                clientToEdit.AddressId = client.AddressId;
                 clientToEdit.Email = client.Email;
-                currentClientToEdit = clientToEdit.ToCurrentClient();
+                clientToEdit.AddressId = client.AddressId;
+                currentClientToEdit.Name = client.Name;
+                currentClientToEdit.Email = client.Email;
+                currentClientToEdit.AddressId = client.AddressId;
+
                 context.SaveChanges();
             }
         }

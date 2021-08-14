@@ -25,7 +25,6 @@ namespace InvoiceManager.Models.Domains
         [Display(Name = "Adres Email")]
         public string Email { get; set; }
 
-        [Required]
         [ForeignKey("User")]
         public string UserId { get; set; }
 
